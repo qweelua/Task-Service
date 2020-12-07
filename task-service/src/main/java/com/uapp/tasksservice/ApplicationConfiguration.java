@@ -18,9 +18,9 @@ import javax.sql.DataSource;
 public class ApplicationConfiguration {
 
     @Bean
-    public HikariDataSource dataSource(@Value("") String url,
-                                       @Value("") String username,
-                                       @Value("") String password) {
+    public HikariDataSource dataSource(@Value("${jdbc.url}") String url,
+                                       @Value("${jdbc.username}") String username,
+                                       @Value("${jdbc.password}") String password) {
         HikariConfig hikariConfig = new HikariConfig();
         hikariConfig.setJdbcUrl(url);
         hikariConfig.setUsername(username);

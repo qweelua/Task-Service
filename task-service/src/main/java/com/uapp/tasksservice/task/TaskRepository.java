@@ -11,8 +11,8 @@ import java.util.List;
 
 @Repository
 public class TaskRepository {
-    private NamedParameterJdbcTemplate jdbcTemplate;
-    private TaskRowMapper taskRowMapper;
+    private final NamedParameterJdbcTemplate jdbcTemplate;
+    private final TaskRowMapper taskRowMapper;
 
     @Autowired
     public TaskRepository(NamedParameterJdbcTemplate jdbcTemplate, TaskRowMapper taskRowMapper) {
