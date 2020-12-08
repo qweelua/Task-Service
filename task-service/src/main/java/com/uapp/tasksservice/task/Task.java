@@ -5,7 +5,6 @@ import java.util.Objects;
 
 public class Task {
     private int id;
-    private int userId;
     private String name;
     private String description;
     private LocalDate dateOfCreation;
@@ -22,14 +21,6 @@ public class Task {
 
     public void setId(int id) {
         this.id = id;
-    }
-
-    public int getUserId() {
-        return userId;
-    }
-
-    public void setUserId(int userId) {
-        this.userId = userId;
     }
 
     public String getName() {
@@ -61,23 +52,21 @@ public class Task {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Task task = (Task) o;
-        return id == task.id &&
-                userId == task.userId &&
-                name.equals(task.name) &&
-                description.equals(task.description) &&
-                dateOfCreation.equals(task.dateOfCreation);
+        return getId() == task.getId() &&
+                getName().equals(task.getName()) &&
+                getDescription().equals(task.getDescription()) &&
+                getDateOfCreation().equals(task.getDateOfCreation());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, userId, name, description, dateOfCreation);
+        return Objects.hash(getId(), getName(), getDescription(), getDateOfCreation());
     }
 
     @Override
     public String toString() {
         return "Task{" +
                 "id=" + id +
-                ", userId=" + userId +
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
                 ", dateOfCreation=" + dateOfCreation +

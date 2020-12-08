@@ -19,7 +19,6 @@ public class ColumnTaskRelationRepository {
     }
 
     public void save(ColumnTaskRelation columnTaskRelation) {
-
         String sql = "INSERT INTO column_task_relation(\"columnId\", \"taskId\") VALUES (:columnId, :taskId)";
 
         MapSqlParameterSource param = new MapSqlParameterSource();
@@ -34,9 +33,11 @@ public class ColumnTaskRelationRepository {
         return jdbcTemplate.query(sql, rowMapper);
     }
 
-    public List<ColumnTaskRelation> getByTaskId(int taskId) {
-        String sql = "SELECT \"columnId\",\"taskId\" FROM column_task_relation WHERE \"taskId\" = " + taskId;
-        return jdbcTemplate.query(sql, rowMapper);
+    public ColumnTaskRelation getByTaskId(int taskId) {
+        String sql = "SELECT \"columnId\",\"taskId\" FROM column_task_relation WHERE \"taskId\" = :taskId";
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("id", taskId);
+        return jdbcTemplate.queryForObject(sql, params, rowMapper);
     }
 
 }

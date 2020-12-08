@@ -27,12 +27,7 @@ public class ColumnRepository {
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("name", column.getName());
 
-        KeyHolder keyHolder = new GeneratedKeyHolder();
-
-        jdbcTemplate.update(sql, params, keyHolder, new String[]{"id"});
-
-        int id = keyHolder.getKey().intValue();
-        column.setId(id);
+        jdbcTemplate.update(sql, params);
     }
 
     public Column getColumnById(int id) {

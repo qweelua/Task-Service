@@ -24,16 +24,11 @@ public class TaskRepository {
         String sql = "INSERT INTO tasks(\"userId\", name, description, \"dateOfCreate\") VALUES (:userId, :name, :description, :date)";
 
         MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue("userId", task.getUserId());
         params.addValue("name", task.getName());
         params.addValue("description", task.getDescription());
         params.addValue("date", task.getDateOfCreation());
 
-        KeyHolder keyHolder = new GeneratedKeyHolder();
-        jdbcTemplate.update(sql, params, keyHolder, new String[]{"id"});
-
-        int id = keyHolder.getKey().intValue();
-        task.setId(id);
+        jdbcTemplate.update(sql, params);
     }
 
     public Task getTaskById(int id) {

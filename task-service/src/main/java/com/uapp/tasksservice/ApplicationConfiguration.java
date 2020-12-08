@@ -18,7 +18,7 @@ import javax.sql.DataSource;
 public class ApplicationConfiguration {
 
     @Bean
-    public HikariDataSource dataSource(@Value("${jdbc.url}") String url,
+    public HikariDataSource hikariDataSource(@Value("${jdbc.url}") String url,
                                        @Value("${jdbc.username}") String username,
                                        @Value("${jdbc.password}") String password) {
         HikariConfig hikariConfig = new HikariConfig();
@@ -37,7 +37,7 @@ public class ApplicationConfiguration {
     }
 
     @Bean
-    public NamedParameterJdbcTemplate jdbcTemplate(DataSource dataSource) {
+    public NamedParameterJdbcTemplate namedJdbcTemplate(DataSource dataSource) {
         return new NamedParameterJdbcTemplate(dataSource);
     }
 }

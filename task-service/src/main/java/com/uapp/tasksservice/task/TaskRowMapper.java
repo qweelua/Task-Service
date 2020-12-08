@@ -13,7 +13,6 @@ public class TaskRowMapper implements RowMapper<Task> {
     public Task mapRow(ResultSet rs, int rowNum) throws SQLException {
         Task task = new Task(rs.getString("name"), rs.getString("description"));
         task.setId(rs.getInt("id"));
-        task.setUserId(rs.getInt("userId"));
         task.setDateOfCreation(LocalDate.parse(rs.getString("dateOfCreation")));
         return task;
     }
