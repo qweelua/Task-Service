@@ -21,6 +21,18 @@ public class ColumnTaskRelationService {
         columnTaskRelationRepository.save(columnTaskRelation);
     }
 
+    public boolean updateColumnIdByTaskId(int columnId, int taskId) {
+        return columnTaskRelationRepository.updateColumnIdByTaskId(columnId,taskId);
+    }
+
+    public boolean deleteByColumnId(int columnId) {
+        return columnTaskRelationRepository.deleteByColumnId(columnId);
+    }
+
+    public boolean deleteByTaskId(int taskId) {
+        return columnTaskRelationRepository.deleteByTaskId(taskId);
+    }
+
     public ColumnTaskRelation getColumnByTaskId(int taskId) {
         return columnTaskRelationRepository.getByTaskId(taskId);
     }

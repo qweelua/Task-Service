@@ -22,6 +22,14 @@ public class TaskService {
         taskRepository.save(task);
     }
 
+    public boolean delete(int id) {
+        return taskRepository.delete(id);
+    }
+
+    public boolean update(int id, String name, String description, LocalDate dateOfCreation) {
+        return taskRepository.update(id, name, description, dateOfCreation);
+    }
+
     public Task getTaskById(int id) {
         return taskRepository.getTaskById(id);
     }

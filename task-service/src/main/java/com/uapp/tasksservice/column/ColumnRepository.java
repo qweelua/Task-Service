@@ -21,13 +21,41 @@ public class ColumnRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public void save(Column column) {
+    public Column save(Column column) {
         String sql = "INSERT INTO columns(name) VALUES(:name)";
 
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("name", column.getName());
 
-        jdbcTemplate.update(sql, params);
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+
+        jdbcTemplate.update(sql, params, keyHolder, new String[]{"id"});
+
+        int id = keyHolder.getKey().intValue();
+        column.setId(id);
+        return column;
+
+    }
+
+    public boolean update(int id, String name) {
+        String sql = "UPDATE columns SET name = :name WHERE id = :id";
+
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("name", name);
+        params.addValue("id", id);
+
+        int update = jdbcTemplate.update(sql, params);
+        return update != 0;
+    }
+
+    public boolean delete(int id) {
+        String sql = "DELETE FROM columns WHERE id = :id";
+
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("id", id);
+
+        int update = jdbcTemplate.update(sql, params);
+        return update != 0;
     }
 
     public Column getColumnById(int id) {
@@ -41,7 +69,7 @@ public class ColumnRepository {
 
     public List<Column> getAllColumns() {
         String sql = "SELECT id, name FROM columns";
-        return jdbcTemplate.query(sql,rowMapper);
+        return jdbcTemplate.query(sql, rowMapper);
     }
 
 }

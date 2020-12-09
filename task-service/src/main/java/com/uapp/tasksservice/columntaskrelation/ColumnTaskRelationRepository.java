@@ -28,6 +28,37 @@ public class ColumnTaskRelationRepository {
         jdbcTemplate.update(sql, param);
     }
 
+    public boolean deleteByColumnId(int id) {
+        String sql = "DELETE FROM column_task_relation WHERE \"columnId\" = :id";
+
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("id", id);
+
+        int update = jdbcTemplate.update(sql, params);
+        return update != 0;
+    }
+
+    public boolean deleteByTaskId(int id) {
+        String sql = "DELETE FROM column_task_relation WHERE \"taskId\" = :id";
+
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("id", id);
+
+        int update = jdbcTemplate.update(sql, params);
+        return update != 0;
+    }
+
+    public boolean updateColumnIdByTaskId(int columnId, int taskId) {
+        String sql = "UPDATE column_task_relation SET \"columnId\" = :columnId WHERE \"taskId\" = :taskId";
+
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("columnId", columnId);
+        params.addValue("taskId", taskId);
+
+        int update = jdbcTemplate.update(sql, params);
+        return update != 0;
+    }
+
     public List<ColumnTaskRelation> getByColumnId(int columnId) {
         String sql = "SELECT \"columnId\",\"taskId\" FROM column_task_relation WHERE \"columnId\" = " + columnId;
         return jdbcTemplate.query(sql, rowMapper);

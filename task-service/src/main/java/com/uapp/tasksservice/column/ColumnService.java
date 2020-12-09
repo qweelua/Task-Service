@@ -14,10 +14,17 @@ public class ColumnService {
         this.columnRepository = columnRepository;
     }
 
-    public void save(int id, String name) {
+    public Column save(String name) {
         Column column = new Column(name);
-        column.setId(id);
-        columnRepository.save(column);
+        return columnRepository.save(column);
+    }
+
+    public boolean update(int id, String name) {
+        return columnRepository.update(id, name);
+    }
+
+    public boolean delete(int id) {
+        return columnRepository.delete(id);
     }
 
     public Column getColumnById(int id) {
