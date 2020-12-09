@@ -15,11 +15,11 @@ public class TaskService {
         this.taskRepository = taskRepository;
     }
 
-    public void save(String name, String description, LocalDate dateOfCreation) {
+    public Task save(String name, String description, LocalDate dateOfCreation) {
         Task task = new Task(name, description);
         task.setDescription(description);
         task.setDateOfCreation(dateOfCreation);
-        taskRepository.save(task);
+        return taskRepository.save(task);
     }
 
     public boolean delete(int id) {

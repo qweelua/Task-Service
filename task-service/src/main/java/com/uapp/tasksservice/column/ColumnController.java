@@ -2,6 +2,9 @@ package com.uapp.tasksservice.column;
 
 import com.uapp.tasksservice.columntaskrelation.ColumnTaskRelation;
 import com.uapp.tasksservice.columntaskrelation.ColumnTaskRelationService;
+import com.uapp.tasksservice.task.Task;
+import com.uapp.tasksservice.task.TaskDto;
+import com.uapp.tasksservice.task.TaskDtoConverter;
 import com.uapp.tasksservice.task.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,13 +20,15 @@ public class ColumnController {
     private final ColumnDtoConverter columnDtoConverter;
     private final ColumnTaskRelationService columnTaskRelationService;
     private final TaskService taskService;
+    private final TaskDtoConverter taskDtoConverter;
 
     @Autowired
-    public ColumnController(ColumnService columnService, ColumnDtoConverter columnDtoConverter, ColumnTaskRelationService columnTaskRelationService, TaskService taskService) {
+    public ColumnController(ColumnService columnService, ColumnDtoConverter columnDtoConverter, ColumnTaskRelationService columnTaskRelationService, TaskService taskService, TaskDtoConverter taskDtoConverter) {
         this.columnService = columnService;
         this.columnDtoConverter = columnDtoConverter;
         this.columnTaskRelationService = columnTaskRelationService;
         this.taskService = taskService;
+        this.taskDtoConverter = taskDtoConverter;
     }
 
     @GetMapping("/column")
@@ -66,6 +71,18 @@ public class ColumnController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>(id, HttpStatus.OK);
+    }
+
+    @GetMapping("column/{id}/tasks")
+    public ResponseEntity<List<TaskDto>> getTasksByColumnId(@PathVariable int id) {
+        List<ColumnTaskRelation> tasksByColumnId = columnTaskRelationService.getTasksByColumnId(id);
+        List<Task> tasks = getAvailableTasks(tasksByColumnId);
+        List<TaskDto> taskDtos = tasks.stream().map(taskDtoConverter::convert).collect(Collectors.toList());
+        return new ResponseEntity<>(taskDtos, HttpStatus.OK);
+    }
+
+    private List<Task> getAvailableTasks(List<ColumnTaskRelation> tasksByColumnId) {
+        return tasksByColumnId.stream().map(ColumnTaskRelation::getTaskId).map(taskService::getTaskById).collect(Collectors.toList());
     }
 
     private void deleteTasksThatWhereInColumn(List<ColumnTaskRelation> tasksByColumnId) {

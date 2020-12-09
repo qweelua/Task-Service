@@ -3,6 +3,8 @@ package com.uapp.tasksservice.task;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
@@ -19,7 +21,7 @@ public class TaskRepository {
         this.taskRowMapper = taskRowMapper;
     }
 
-    public void save(Task task) {
+    public Task save(Task task) {
         String sql = "INSERT INTO tasks(name, description, \"dateOfCreate\") VALUES (:name, :description, :date)";
 
         MapSqlParameterSource params = new MapSqlParameterSource();
@@ -27,7 +29,14 @@ public class TaskRepository {
         params.addValue("description", task.getDescription());
         params.addValue("date", task.getDateOfCreation());
 
-        jdbcTemplate.update(sql, params);
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+
+        jdbcTemplate.update(sql, params, keyHolder);
+
+        int id = keyHolder.getKey().intValue();
+        task.setId(id);
+
+        return task;
     }
 
     public boolean update(int id, String name, String description, LocalDate dateOfCreate) {
