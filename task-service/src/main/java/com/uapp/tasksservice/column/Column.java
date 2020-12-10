@@ -5,9 +5,18 @@ import java.util.Objects;
 public class Column {
     private int id;
     private String name;
+    private int order;
 
     public Column(String name) {
         this.name = name;
+    }
+
+    public int getOrder() {
+        return order;
+    }
+
+    public void setOrder(int order) {
+        this.order = order;
     }
 
     public int getId() {

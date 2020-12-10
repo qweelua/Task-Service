@@ -5,11 +5,13 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 
 class TaskServiceTest {
@@ -21,7 +23,10 @@ class TaskServiceTest {
     void setUp() {
         MockitoAnnotations.initMocks(this);
         when(taskRepository.getAllTasks()).thenReturn(getTestData());
-        when(taskRepository.getTaskById(0)).thenReturn(getTask());
+        when(taskRepository.getTaskById(anyInt())).thenReturn(getTask());
+        when(taskRepository.save(any(Task.class))).thenReturn(getTask());
+        when(taskRepository.update(anyInt(), anyString(), anyString(), any(LocalDate.class))).thenReturn(true);
+        when(taskRepository.delete(anyInt())).thenReturn(true);
         taskService = new TaskService(taskRepository);
     }
 
@@ -39,14 +44,32 @@ class TaskServiceTest {
     }
 
     @Test
-    void getTaskById() {
-        Task task = taskService.getTaskById(0);
+    void testGetTaskById() {
+        Task task = taskService.getTaskById(1);
         assertEquals("task0", task.getName());
     }
 
     @Test
-    void getAllTasks() {
+    void testGetAllTasks() {
         List<Task> allTasks = taskService.getAllTasks();
         assertEquals("task0", allTasks.get(0).getName());
+    }
+
+    @Test
+    void testSave() {
+        Task savedTask = taskService.save("task0", "desc0", LocalDate.of(2020, 10, 12));
+        assertEquals("task0", savedTask.getName());
+    }
+
+    @Test
+    void testUpdate() {
+        boolean isUpdate = taskService.update(1, "name", "desc", LocalDate.of(2020, 10, 12));
+        assertTrue(isUpdate);
+    }
+
+    @Test
+    void testDelete() {
+        boolean isDelete = taskService.delete(0);
+        assertTrue(isDelete);
     }
 }

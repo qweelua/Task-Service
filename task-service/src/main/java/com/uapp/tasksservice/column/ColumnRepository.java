@@ -22,11 +22,11 @@ public class ColumnRepository {
     }
 
     public Column save(Column column) {
-        String sql = "INSERT INTO columns(name) VALUES(:name)";
+        String sql = "INSERT INTO columns(name, \"order\") VALUES(:name, :order)";
 
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("name", column.getName());
-
+        params.addValue("order", column.getId());
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(sql, params, keyHolder, new String[]{"id"});
@@ -43,6 +43,17 @@ public class ColumnRepository {
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("name", name);
         params.addValue("id", id);
+
+        int update = jdbcTemplate.update(sql, params);
+        return update != 0;
+    }
+
+    public boolean updateOrder(int id, int order) {
+        String sql = "UPDATE columns SET \"order\" = :order WHERE id = :id";
+
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("id", id);
+        params.addValue("order", order);
 
         int update = jdbcTemplate.update(sql, params);
         return update != 0;

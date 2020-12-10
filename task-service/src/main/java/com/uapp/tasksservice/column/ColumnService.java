@@ -23,6 +23,10 @@ public class ColumnService {
         return columnRepository.update(id, name);
     }
 
+    public boolean updateOrder(int id, int order) {
+        return columnRepository.updateOrder(id,order);
+    }
+
     public boolean delete(int id) {
         return columnRepository.delete(id);
     }

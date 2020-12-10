@@ -13,6 +13,7 @@ public class ColumnRowMapper implements RowMapper<Column> {
     public Column mapRow(ResultSet rs, int rowNum) throws SQLException {
         Column column = new Column(rs.getString("name"));
         column.setId(rs.getInt("id"));
+        column.setOrder(rs.getInt("order"));
         return column;
     }
 }

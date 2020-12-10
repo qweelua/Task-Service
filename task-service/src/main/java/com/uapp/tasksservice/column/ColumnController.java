@@ -44,6 +44,17 @@ public class ColumnController {
         return new ResponseEntity<>(columnDtoConverter.convert(columnService.save(name)), HttpStatus.OK);
     }
 
+    @PutMapping("/column")
+    public ResponseEntity<int[]> updateOrder(@RequestParam int[] orders) {
+        for (int i = 0; i < orders.length; i++) {
+            boolean isUpdate = columnService.updateOrder(orders[i], i);
+            if (!isUpdate) {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
+        }
+        return new ResponseEntity<>(orders, HttpStatus.OK);
+    }
+
     @GetMapping("/column/{id}")
     public ResponseEntity<ColumnDto> getColumnById(@PathVariable int id) {
         Column columnById = columnService.getColumnById(id);

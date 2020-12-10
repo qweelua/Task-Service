@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 
 class ColumnServiceTest {
@@ -21,7 +23,11 @@ class ColumnServiceTest {
     void setUp() {
         MockitoAnnotations.initMocks(this);
         when(columnRepository.getAllColumns()).thenReturn(getColumns());
-        when(columnRepository.getColumnById(0)).thenReturn(getColumn());
+        when(columnRepository.getColumnById(anyInt())).thenReturn(getColumn());
+        when(columnRepository.delete(anyInt())).thenReturn(true);
+        when(columnRepository.update(anyInt(), anyString())).thenReturn(true);
+        when(columnRepository.save(any(Column.class))).thenReturn(getColumn());
+        when(columnRepository.updateOrder(anyInt(), anyInt())).thenReturn(true);
         columnService = new ColumnService(columnRepository);
     }
 
@@ -36,6 +42,30 @@ class ColumnServiceTest {
         Column column = new Column("column0");
         column.setId(0);
         return column;
+    }
+
+    @Test
+    void testSave() {
+        Column updatedColumn = columnService.save("column0");
+        assertEquals("column0", updatedColumn.getName());
+    }
+
+    @Test
+    void testUpdate() {
+        boolean isUpdated = columnService.update(2, "column0");
+        assertTrue(isUpdated);
+    }
+
+    @Test
+    void testUpdateOrder() {
+        boolean isUpdated = columnService.updateOrder(122, 2);
+        assertTrue(isUpdated);
+    }
+
+    @Test
+    void testDelete() {
+        boolean isDelete = columnService.delete(1000);
+        assertTrue(isDelete);
     }
 
     @Test
