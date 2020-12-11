@@ -1,2 +1,2 @@
 alter table columns
-    add "order" int not null;
+    add "order" int not null default 0;

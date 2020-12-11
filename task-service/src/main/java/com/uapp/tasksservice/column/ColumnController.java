@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -31,20 +32,22 @@ public class ColumnController {
         this.taskDtoConverter = taskDtoConverter;
     }
 
-    @GetMapping("/column")
+    @GetMapping("/columns/get")
     public ResponseEntity<List<ColumnDto>> getAllColumns() {
-        return new ResponseEntity<>(columnService.getAllColumns()
+        List<Column> allColumns = columnService.getAllColumns()
                 .stream()
-                .map(columnDtoConverter::convert)
-                .collect(Collectors.toList()), HttpStatus.OK);
+                .sorted(Comparator.comparingInt(Column::getOrder))
+                .collect(Collectors.toList());
+
+        return new ResponseEntity<>(columnDtoConverter.convertAll(allColumns), HttpStatus.OK);
     }
 
-    @PostMapping("/column")
+    @PostMapping("/column/add")
     public ResponseEntity<ColumnDto> addColumn(@RequestParam String name) {
         return new ResponseEntity<>(columnDtoConverter.convert(columnService.save(name)), HttpStatus.OK);
     }
 
-    @PutMapping("/column")
+    @PutMapping("/column/update-order")
     public ResponseEntity<int[]> updateOrder(@RequestParam int[] orders) {
         for (int i = 0; i < orders.length; i++) {
             boolean isUpdate = columnService.updateOrder(orders[i], i);
@@ -55,7 +58,7 @@ public class ColumnController {
         return new ResponseEntity<>(orders, HttpStatus.OK);
     }
 
-    @GetMapping("/column/{id}")
+    @GetMapping("/column/get/{id}")
     public ResponseEntity<ColumnDto> getColumnById(@PathVariable int id) {
         Column columnById = columnService.getColumnById(id);
         if (columnById == null) {
@@ -64,7 +67,7 @@ public class ColumnController {
         return new ResponseEntity<>(columnDtoConverter.convert(columnById), HttpStatus.OK);
     }
 
-    @PutMapping("/column/{id}")
+    @PutMapping("/column/update/{id}")
     public ResponseEntity<Integer> updateColumn(@PathVariable int id, @RequestParam String name) {
         boolean isUpdate = columnService.update(id, name);
         if (!isUpdate) {
@@ -73,7 +76,7 @@ public class ColumnController {
         return new ResponseEntity<>(id, HttpStatus.OK);
     }
 
-    @DeleteMapping("/column/{id}")
+    @DeleteMapping("/column/delete/{id}")
     public ResponseEntity<Integer> deleteColumn(@PathVariable int id) {
         boolean isDelete = columnService.delete(id);
         deleteTasksThatWhereInColumn(columnTaskRelationService.getTasksByColumnId(id));
@@ -84,20 +87,26 @@ public class ColumnController {
         return new ResponseEntity<>(id, HttpStatus.OK);
     }
 
-    @GetMapping("column/{id}/tasks")
+    @GetMapping("column/get/{id}/tasks")
     public ResponseEntity<List<TaskDto>> getTasksByColumnId(@PathVariable int id) {
         List<ColumnTaskRelation> tasksByColumnId = columnTaskRelationService.getTasksByColumnId(id);
         List<Task> tasks = getAvailableTasks(tasksByColumnId);
-        List<TaskDto> taskDtos = tasks.stream().map(taskDtoConverter::convert).collect(Collectors.toList());
-        return new ResponseEntity<>(taskDtos, HttpStatus.OK);
+        return new ResponseEntity<>(taskDtoConverter.convertAll(tasks), HttpStatus.OK);
     }
 
     private List<Task> getAvailableTasks(List<ColumnTaskRelation> tasksByColumnId) {
-        return tasksByColumnId.stream().map(ColumnTaskRelation::getTaskId).map(taskService::getTaskById).collect(Collectors.toList());
+        return tasksByColumnId
+                .stream()
+                .map(ColumnTaskRelation::getTaskId)
+                .map(taskService::getTaskById)
+                .collect(Collectors.toList());
     }
 
     private void deleteTasksThatWhereInColumn(List<ColumnTaskRelation> tasksByColumnId) {
-        tasksByColumnId.stream().map(ColumnTaskRelation::getTaskId).forEach(taskService::delete);
+        tasksByColumnId
+                .stream()
+                .map(ColumnTaskRelation::getTaskId)
+                .forEach(taskService::delete);
     }
 
 }
