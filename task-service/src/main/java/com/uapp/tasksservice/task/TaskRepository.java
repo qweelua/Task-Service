@@ -73,7 +73,7 @@ public class TaskRepository {
     }
 
     public List<Task> getAllTasks() {
-        String sql = "SELECT id, \"userId\", name, description, \"dateOfCreate\" FROM tasks";
+        String sql = "SELECT id, name, description, \"dateOfCreate\" FROM tasks";
         return jdbcTemplate.query(sql, taskRowMapper);
     }
 }

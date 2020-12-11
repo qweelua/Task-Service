@@ -70,7 +70,7 @@ public class ColumnRepository {
     }
 
     public Column getColumnById(int id) {
-        String sql = "SELECT id, name FROM columns WHERE id = :id";
+        String sql = "SELECT id, name, \"order\" FROM columns WHERE id = :id";
 
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("id", id);
@@ -79,7 +79,7 @@ public class ColumnRepository {
     }
 
     public List<Column> getAllColumns() {
-        String sql = "SELECT id, name FROM columns";
+        String sql = "SELECT id, name, \"order\" FROM columns";
         return jdbcTemplate.query(sql, rowMapper);
     }
 

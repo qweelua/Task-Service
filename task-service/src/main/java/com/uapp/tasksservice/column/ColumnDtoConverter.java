@@ -12,6 +12,7 @@ public class ColumnDtoConverter {
         ColumnDto columnDto = new ColumnDto();
         columnDto.setId(column.getId());
         columnDto.setName(column.getName());
+        columnDto.setOrder(column.getOrder());
         return columnDto;
     }
 

@@ -4,7 +4,6 @@ import java.time.LocalDate;
 
 public class TaskDto {
     private int id;
-    private int userId;
     private String name;
     private String description;
     private LocalDate dateOfCreation;
@@ -15,14 +14,6 @@ public class TaskDto {
 
     public void setId(int id) {
         this.id = id;
-    }
-
-    public int getUserId() {
-        return userId;
-    }
-
-    public void setUserId(int userId) {
-        this.userId = userId;
     }
 
     public String getName() {

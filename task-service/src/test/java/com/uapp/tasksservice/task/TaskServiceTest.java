@@ -22,11 +22,6 @@ class TaskServiceTest {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.initMocks(this);
-        when(taskRepository.getAllTasks()).thenReturn(getTestData());
-        when(taskRepository.getTaskById(anyInt())).thenReturn(getTask());
-        when(taskRepository.save(any(Task.class))).thenReturn(getTask());
-        when(taskRepository.update(anyInt(), anyString(), anyString(), any(LocalDate.class))).thenReturn(true);
-        when(taskRepository.delete(anyInt())).thenReturn(true);
         taskService = new TaskService(taskRepository);
     }
 
@@ -45,30 +40,35 @@ class TaskServiceTest {
 
     @Test
     void testGetTaskById() {
+        when(taskRepository.getTaskById(anyInt())).thenReturn(getTask());
         Task task = taskService.getTaskById(1);
         assertEquals("task0", task.getName());
     }
 
     @Test
     void testGetAllTasks() {
+        when(taskRepository.getAllTasks()).thenReturn(getTestData());
         List<Task> allTasks = taskService.getAllTasks();
         assertEquals("task0", allTasks.get(0).getName());
     }
 
     @Test
     void testSave() {
+        when(taskRepository.save(any(Task.class))).thenReturn(getTask());
         Task savedTask = taskService.save("task0", "desc0", LocalDate.of(2020, 10, 12));
         assertEquals("task0", savedTask.getName());
     }
 
     @Test
     void testUpdate() {
+        when(taskRepository.update(anyInt(), anyString(), anyString(), any(LocalDate.class))).thenReturn(true);
         boolean isUpdate = taskService.update(1, "name", "desc", LocalDate.of(2020, 10, 12));
         assertTrue(isUpdate);
     }
 
     @Test
     void testDelete() {
+        when(taskRepository.delete(anyInt())).thenReturn(true);
         boolean isDelete = taskService.delete(0);
         assertTrue(isDelete);
     }

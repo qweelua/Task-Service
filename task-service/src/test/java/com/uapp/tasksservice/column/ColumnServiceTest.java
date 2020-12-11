@@ -22,12 +22,6 @@ class ColumnServiceTest {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.initMocks(this);
-        when(columnRepository.getAllColumns()).thenReturn(getColumns());
-        when(columnRepository.getColumnById(anyInt())).thenReturn(getColumn());
-        when(columnRepository.delete(anyInt())).thenReturn(true);
-        when(columnRepository.update(anyInt(), anyString())).thenReturn(true);
-        when(columnRepository.save(any(Column.class))).thenReturn(getColumn());
-        when(columnRepository.updateOrder(anyInt(), anyInt())).thenReturn(true);
         columnService = new ColumnService(columnRepository);
     }
 
@@ -46,36 +40,42 @@ class ColumnServiceTest {
 
     @Test
     void testSave() {
+        when(columnRepository.save(any(Column.class))).thenReturn(getColumn());
         Column updatedColumn = columnService.save("column0");
         assertEquals("column0", updatedColumn.getName());
     }
 
     @Test
     void testUpdate() {
+        when(columnRepository.update(anyInt(), anyString())).thenReturn(true);
         boolean isUpdated = columnService.update(2, "column0");
         assertTrue(isUpdated);
     }
 
     @Test
     void testUpdateOrder() {
+        when(columnRepository.updateOrder(anyInt(), anyInt())).thenReturn(true);
         boolean isUpdated = columnService.updateOrder(122, 2);
         assertTrue(isUpdated);
     }
 
     @Test
     void testDelete() {
+        when(columnRepository.delete(anyInt())).thenReturn(true);
         boolean isDelete = columnService.delete(1000);
         assertTrue(isDelete);
     }
 
     @Test
     void getColumnById() {
+        when(columnRepository.getColumnById(anyInt())).thenReturn(getColumn());
         Column columnById = columnService.getColumnById(0);
         assertEquals("column0", columnById.getName());
     }
 
     @Test
     void getAllColumns() {
+        when(columnRepository.getAllColumns()).thenReturn(getColumns());
         List<Column> allColumns = columnService.getAllColumns();
         assertEquals(0, allColumns.get(0).getId());
     }

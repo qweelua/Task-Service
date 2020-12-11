@@ -21,11 +21,6 @@ class ColumnTaskRelationServiceTest {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.initMocks(this);
-        when(columnTaskRelationRepository.getByColumnId(anyInt())).thenReturn(getColumnTaskRelationsList());
-        when(columnTaskRelationRepository.getByTaskId(anyInt())).thenReturn(getColumnTaskRelation());
-        when(columnTaskRelationRepository.deleteByColumnId(anyInt())).thenReturn(true);
-        when(columnTaskRelationRepository.deleteByTaskId(anyInt())).thenReturn(true);
-        when(columnTaskRelationRepository.updateColumnIdByTaskId(anyInt(), anyInt())).thenReturn(true);
         columnTaskRelationService = new ColumnTaskRelationService(columnTaskRelationRepository);
     }
 
@@ -44,30 +39,35 @@ class ColumnTaskRelationServiceTest {
 
     @Test
     void testGetColumnByTaskId() {
+        when(columnTaskRelationRepository.getByTaskId(anyInt())).thenReturn(getColumnTaskRelation());
         ColumnTaskRelation columnByTaskId = columnTaskRelationService.getColumnByTaskId(0);
         assertEquals(2, columnByTaskId.getTaskId());
     }
 
     @Test
     void testGetTasksByColumnId() {
+        when(columnTaskRelationRepository.getByColumnId(anyInt())).thenReturn(getColumnTaskRelationsList());
         List<ColumnTaskRelation> tasksByColumnId = columnTaskRelationService.getTasksByColumnId(0);
         assertThat(1, is(tasksByColumnId.size()));
     }
 
     @Test
     void testDeleteByColumnId() {
+        when(columnTaskRelationRepository.deleteByColumnId(anyInt())).thenReturn(true);
         boolean isDeleted = columnTaskRelationService.deleteByColumnId(2);
         assertTrue(isDeleted);
     }
 
     @Test
     void testDeleteByTaskId() {
+        when(columnTaskRelationRepository.deleteByTaskId(anyInt())).thenReturn(true);
         boolean isDeleted = columnTaskRelationService.deleteByTaskId(12);
         assertTrue(isDeleted);
     }
 
     @Test
     void testUpdateColumnIdByTaskId() {
+        when(columnTaskRelationRepository.updateColumnIdByTaskId(anyInt(), anyInt())).thenReturn(true);
         boolean isUpdated = columnTaskRelationService.updateColumnIdByTaskId(12, 2200);
         assertTrue(isUpdated);
     }
